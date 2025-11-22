@@ -8,7 +8,7 @@ servers:
   - description: "Nerdinary 9th Team D Local Server"
     url: http://localhost:3000/docs
   - description: "Nerdinary 9th Team D Production Server"
-    url: http://3.34.50.209:3000
+    url: https://3.34.50.209:3000
 
 paths:
   /api/auth/signup:
@@ -708,3 +708,183 @@ paths:
               example:
                 success: false
                 message: "서버 내부 오류가 발생했습니다."
+
+
+components:
+  schemas:
+    SnapResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "리뷰 생성 완료"
+        data:
+          $ref: "#/components/schemas/Snap"
+
+    Snap:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        userId:
+          type: integer
+          nullable: true
+        challengeId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    SnapImage:
+      type: object
+      properties:
+        id:
+          type: integer
+        imageUrl:
+          type: string
+          nullable: true
+        title:
+          type: string
+        content:
+          type: string
+        userId:
+          type: integer
+          nullable: true
+        challengeId:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+
+    SnapDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        content:
+          type: string
+        imageUrl:
+          type: string
+          nullable: true
+        user:
+          $ref: "#/components/schemas/User"
+        challenge:
+          $ref: "#/components/schemas/Challenge"
+        createdAt:
+          type: string
+          format: date-time
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        nickname:
+          type: string
+        password:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    Challenge:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        context:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        endAt:
+          type: string
+          format: date-time
+        thumbnailUrl:
+          type: string
+        participants:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChallengeParticipant"
+
+    ChallengeParticipant:
+      type: object
+      properties:
+        id:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        userId:
+          type: integer
+        challengeId:
+          type: integer
+        user:
+          $ref: "#/components/schemas/User"
+        challenge:
+          $ref: "#/components/schemas/Challenge"
+
+    ApiResponseChallenge:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/Challenge"
+
+    ApiResponseChallengeParticipants:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/ChallengeParticipant"
+
+    ApiResponseChallengeList:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: array
+          items:
+            $ref: "#/components/schemas/Challenge"
+
+    ChallengeCreateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        context:
+          type: string
+        endAt:
+          type: string
+          format: date-time
+        thumbnailUrl:
+          type: string
+      required:
+        - title
+        - context
+        - endAt
