@@ -70,11 +70,23 @@ export const getMyChallenges = async (userId) => {
     const myChallenges = await prisma.user.findUnique({
         where: { id: userId },
         select: {
-        participants: {
+            participants: {
             select: {
-                challenge: true,
+                challenge: {
+                select: {
+                    id: true,
+                    title: true,
+                    context: true,
+                    createdAt: true,
+                    endAt: true,
+                    thumbnailUrl: true,
+                    _count: {
+                    select: { participants: true } // 참여자 수
+                    },
+                },
+                },
             },
-        },
+            },
         },
     });
     return myChallenges
