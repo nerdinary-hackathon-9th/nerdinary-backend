@@ -5,6 +5,7 @@ import userRouter from "./users.router.js";
 
 const routers = Router();
 
+routers.use("/api/challenge", challengeRouter);
 routers.use("/api/auth", authRouter);
 routers.use("/api/user", userRouter);
 
