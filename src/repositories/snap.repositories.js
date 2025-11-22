@@ -2,15 +2,15 @@ import { prisma } from '../configs/db.config.js';
 
 class SnapRepository {
   async findChallengeById(challengeId) {
-    return await prisma.challenge.findUnique({ where: { id: challengeId } });
+    return await prisma.challenge.findFirst({ where: { id: challengeId } });
   }
 
   async findUserById(userId) {
-    return await prisma.user.findUnique({ where: { id: userId } });
+    return await prisma.user.findFirst({ where: { id: userId } });
   }
 
   async findParticipation(challengeId, userId) {
-    return await prisma.challengeParticipant.findUnique({
+    return await prisma.challengeParticipant.findFirst({
         where: { challengeId, userId }
     });
   }
@@ -22,7 +22,7 @@ class SnapRepository {
   }
 
   async findSnapById(snapId) {
-    return await prisma.snap.findUnique({
+    return await prisma.snap.findFirst({
         where: { id: snapId },
         include: {
             user: { select: { id: true, nickname: true } },
