@@ -160,32 +160,52 @@ paths:
 
   # ===== Snap APIs =====
   /api/snap/{challengeId}/{userId}:
-    post:
-      summary: 스냅 생성
-      description: 챌린지 인증샷을 업로드합니다.
-      tags:
-        - Snap
-      parameters:
-        - $ref: '#/components/parameters/ChallengeIdParam'
-        - $ref: '#/components/parameters/UserIdParam'
-      requestBody:
+  post:
+    summary: 스냅 생성
+    description: 챌린지 인증샷을 업로드합니다.
+    tags:
+      - Snap
+    parameters:
+      - $ref: '#/components/parameters/ChallengeIdParam'
+      - $ref: '#/components/parameters/UserIdParam'
+    requestBody:
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            required:
+              - title
+            properties:
+              title:
+                type: string
+                description: 스냅 제목
+                maxLength: 100
+                example: "오늘의 운동 완료!"
+              images:
+                type: array
+                items:
+                  type: string
+                  format: binary
+                description: 이미지 파일 (JPG, PNG, GIF)
+              content:
+                type: string
+                description: 인증샷 설명
+                maxLength: 500
+                example: "30분 러닝 완료했습니다!"
+    responses:
+      '200':
+        description: 스냅 생성 완료
         content:
-          multipart/form-data:
+          application/json:
             schema:
-              $ref: '#/components/schemas/CreateSnapRequest'
-      responses:
-        '200':
-          description: 스냅 생성 완료
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SnapResponse'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/ServerError'
+              $ref: '#/components/schemas/SnapResponse'
+      '400':
+        $ref: '#/components/responses/BadRequest'
+      '404':
+        $ref: '#/components/responses/NotFound'
+      '500':
+        $ref: '#/components/responses/ServerError'
 
   /api/snap/challenge/{challengeId}:
     get:
