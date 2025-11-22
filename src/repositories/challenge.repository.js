@@ -30,7 +30,7 @@ export async function findChallengeListWithOptions({ popular, latest }) {
   }
 
   return prisma.challenge.findMany({
-    orderBy,
+    orderBy: orderBy.length > 0 ? orderBy : undefined,
     include: {
       _count: {
         select: { participants: true },
