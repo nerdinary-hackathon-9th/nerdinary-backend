@@ -5,10 +5,15 @@ import {
   getChallengeById,
   createChallenge,
   getChallengeParticipants,
-  handleGetHotChallenges
+  handleGetHotChallenges,
+  handleChallengesToday
 } from '../controllers/challenge.controller.js';
 
 const router = Router();
+
+router.get('/hot', handleGetHotChallenges);
+
+router.get('/today', handleChallengesToday);
 
 // 기본 리스트
 router.get('/', getChallenges);
@@ -24,7 +29,5 @@ router.get('/:challengeId/participants', getChallengeParticipants);
 
 // 단건 조회 / 삭제
 router.get('/:challengeId', getChallengeById);
-
-router.get('/hot', handleGetHotChallenges);
 
 export default router;
