@@ -37,7 +37,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
 
             # EC2 서버에 배포된 Node.js 애플리케이션 위치로 이동
-            cd /home/ubuntu/Node
+            cd /home/ubuntu/nerdinary-backend
 
             # git 충돌 방지
             git reset --hard HEAD
