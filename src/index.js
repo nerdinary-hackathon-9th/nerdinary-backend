@@ -18,7 +18,12 @@ const app = express()
 const port = process.env.PORT;
  
 app.use(cors({
-  origin: ['http://localhost:5173', 'https://nerdinary-front.vercel.app/'], // 프론트 포트
+  origin: [
+    'http://localhost:5173',
+    'https://nerdinary-front.vercel.app/',
+    'https://sihang.kro.kr',
+    'http://localhost:3000'
+  ],
 }));
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
