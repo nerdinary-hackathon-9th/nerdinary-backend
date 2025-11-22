@@ -8,7 +8,7 @@ servers:
   - description: "Nerdinary 9th Team D Local Server"
     url: http://localhost:3000/docs
   - description: "Nerdinary 9th Team D Production Server"
-    url: http://3.34.50.209/docs
+    url: http://3.34.50.209:3000/api
 
 paths:
   /challenge:
@@ -25,6 +25,257 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Challenge"
+  /snap/{challenge_id}/{user_id}:
+    post:
+      summary: 스냅 생성
+      tags:
+        - Snap
+      parameters:
+        - in: path
+          name: challenge_id
+          required: true
+          schema:
+            type: integer
+          description: 챌린지 ID
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: 유저 ID
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: 제목
+                snap:
+                  type: string
+                  format: binary
+                  description: 이미지 파일
+                content:
+                  type: string
+                  description: 인증샷 설명
+              required:
+                - title
+      responses:
+        "200":
+          description: 리뷰 생성 완료
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnapResponse"
+        "400":
+          description: 요청 형식 오류
+        "404":
+          description: 존재하지 않는 챌린지 또는 사용자
+        "500":
+          description: 서버 내부 오류
+
+  /snaps/challenge/{challengeId}:
+    get:
+      summary: 특정 챌린지 별 모든 스냅 조회
+      tags:
+        - Snap
+      parameters:
+        - in: path
+          name: challengeId
+          required: true
+          schema:
+            type: integer
+          description: 챌린지 ID
+      responses:
+        "200":
+          description: 챌린지별 인증샷 조회 완료
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SnapImage"
+
+  /snaps/user/{userId}:
+    get:
+      summary: 특정 유저별 모든 스냅 조회
+      tags:
+        - Snap
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: integer
+          description: 유저 ID
+      responses:
+        "200":
+          description: 유저별 인증샷 조회 완료
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Snap"
+
+  /snap/{snapId}:
+    get:
+      summary: 개별 스냅 조회
+      tags:
+        - Snap
+      parameters:
+        - in: path
+          name: snapId
+          required: true
+          schema:
+            type: integer
+          description: 스냅 ID
+      responses:
+        "200":
+          description: 스냅 조회 성공
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SnapDetail"
+
+  /snap/{snap_id}/{user_id}:
+    delete:
+      summary: 스냅 삭제
+      tags:
+        - Snap
+      parameters:
+        - in: path
+          name: snapId
+          required: true
+          schema:
+            type: integer
+          description: 스냅 ID
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+          description: 유저 ID
+      responses:
+        "200":
+          description: 스냅 삭제 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                  data:
+                    type: object
+                    properties:
+                      deleteSnap:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+        "400":
+          description: 삭제 권한 없음
+        "404":
+          description: 존재하지 않는 스냅
+        "500":
+          description: 서버 내부 오류
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+
+    Challenge:
+      type: object
+      properties:
+        id:
+          type: number
+        title:
+          type: string
+        description:
+          type: string
+
+    Snap:
+      type: object
+      properties:
+        id:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        imageUrl:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        userId:
+          type: number
+        challengeId:
+          type: number
+
+    SnapImage:
+      type: object
+      properties:
+        imageUrl:
+          type: string
+
+    SnapDetail:
+      type: object
+      properties:
+        id:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        imageUrl:
+          type: string
+        title:
+          type: string
+        content:
+          type: string
+        userId:
+          type: number
+        challengeId:
+          type: number
+        user:
+          type: object
+          properties:
+            nickname:
+              type: string
+
+    SnapResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: "#/components/schemas/Snap"
 
 components:
   schemas:
