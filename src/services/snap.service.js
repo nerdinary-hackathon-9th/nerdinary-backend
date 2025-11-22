@@ -43,6 +43,18 @@ class SnapService {
     }
   }
 
+  async uploadImageOnly(file) {
+    try {
+      const timestamp = Date.now();
+      const safeName = file.originalname?.replace(/\s+/g, "_") || "image";
+      const key = `sihaeng-bucket/uploads/${timestamp}_${safeName}`;
+      const imageUrl = await uploadToS3(file.buffer, key, file.mimetype);
+      return imageUrl;
+    } catch (err) {
+      throw new BadRequestError("이미지 업로드에 실패했습니다.");
+    }
+  }
+
   async deleteSnap(snapId, userId) {
     const snap = await snapRepository.findSnapById(snapId);
     if (!snap) throw new NotFoundError("존재하지 않는 인증샷입니다.");
