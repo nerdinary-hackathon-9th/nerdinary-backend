@@ -78,3 +78,24 @@ export async function findParticipantsByChallengeId(challengeId) {
     },
   });
 }
+
+export async function getHotChallenges() {
+  // 1. 참여자 100명 이상인 챌린지 ID + 참여자 수 가져오기
+  const grouped = await prisma.challengeParticipant.groupBy({
+    by: ['challengeId'],
+    _count: { userId: true },
+    having: { userId: { _count: { gte: 100 } } },
+  });
+
+  const challengeIds = grouped.map(g => g.challengeId);
+
+  // 2. 챌린지 정보 가져오기
+  const challenges = await prisma.challenge.findMany({
+    where: { id: { in: challengeIds } },
+    include: {
+      _count: { select: { participants: true } }, // 참여자 수 포함
+    },
+  });
+
+  return challenges;
+}
