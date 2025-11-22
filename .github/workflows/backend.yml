@@ -45,7 +45,7 @@ jobs:
             git pull origin main
 
             # backend.env 전체 적용
-            echo "${{ secrets.BE_PROD_ENV }}" > .env
+            echo "${{ secrets.BACKEND_ENV }}" > .env
 
             # Prisma 마이그레이션
             if [ -f "prisma/schema.prisma" ]; then
