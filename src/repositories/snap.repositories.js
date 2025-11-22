@@ -35,7 +35,10 @@ class SnapRepository {
     return await prisma.challengeParticipant.findMany({
         where: { challengeId },
         orderBy: { createdAt: "desc" },
-        select: { imageUrl: true }
+        select: {
+            id: true,
+            imageUrl: true,
+        }
     });
   }
 
