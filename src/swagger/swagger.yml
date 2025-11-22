@@ -162,7 +162,7 @@ paths:
   /api/snap/{challengeId}/{userId}:
   post:
     summary: 스냅 생성
-    description: 챌린지 인증샷을 업로드합니다.
+    description: 챌린지 인증샷을 업로드합니다. `data` 필드 안에 JSON 문자열로 title, content를 넣고, images 필드에 파일을 업로드하세요.
     tags:
       - Snap
     parameters:
@@ -175,24 +175,17 @@ paths:
           schema:
             type: object
             required:
-              - title
+              - data
             properties:
-              title:
+              data:
                 type: string
-                description: 스냅 제목
-                maxLength: 100
-                example: "오늘의 운동 완료!"
+                description: JSON 문자열로 title, content 포함. 예: {"title":"오늘 운동","content":"30분 달리기"}
               images:
                 type: array
                 items:
                   type: string
                   format: binary
-                description: 이미지 파일 (JPG, PNG, GIF)
-              content:
-                type: string
-                description: 인증샷 설명
-                maxLength: 500
-                example: "30분 러닝 완료했습니다!"
+                description: 업로드할 이미지 파일 (JPG, PNG, GIF)
     responses:
       '200':
         description: 스냅 생성 완료
@@ -206,7 +199,6 @@ paths:
         $ref: '#/components/responses/NotFound'
       '500':
         $ref: '#/components/responses/ServerError'
-
   /api/snap/challenge/{challengeId}:
     get:
       summary: 특정 챌린지의 모든 스냅 조회
