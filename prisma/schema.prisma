@@ -18,11 +18,11 @@ model User {
 }
 
 model Challenge {
-  id           Int                    @id @default(autoincrement())
-  title        String
-  context      String
+  id           Int                 @id @default(autoincrement())
+  title        String?
+  context      String?
   createdAt    DateTime               @default(now())
-  endAt        DateTime
+  endAt        DateTime?
   thumbnailUrl String?
   participants ChallengeParticipant[]
 
@@ -30,9 +30,11 @@ model Challenge {
 }
 
 model ChallengeParticipant {
-  id          Int       @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   createdAt   DateTime  @default(now())
-  //imageUrl    String?
+  imageUrl    String?
+  title       String
+  content     String
   userId      Int
   challengeId Int
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
