@@ -30,7 +30,7 @@ model Challenge {
 }
 
 model ChallengeParticipant {
-  id          Int       @id @default(autoincrement())
+  id          Int    @id @default(autoincrement())
   createdAt   DateTime  @default(now())
   imageUrl    String?
   title       String?
