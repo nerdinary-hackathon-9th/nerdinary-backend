@@ -3,7 +3,7 @@ import { handleCheckNickname, handleJoinChallenge, handleGetMyChallenges } from 
 
 const router = Router();
 
-router.get("/:nickname", handleCheckNickname);
+router.get("/check", handleCheckNickname);
 router.post("/challenge", handleJoinChallenge);
 router.get("/:userId/participate",handleGetMyChallenges);
 
