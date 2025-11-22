@@ -75,7 +75,9 @@ class SnapService {
   }
 
   async getSnapsBySnapId(snapId) {
-    return await snapRepository.findSnapsBySnap(snapId);
+    const snap = await snapRepository.findSnapsBySnap(snapId);
+    if (!snap) throw new NotFoundError("존재하지 않는 인증샷입니다.");
+    return snap
   }
 }
 

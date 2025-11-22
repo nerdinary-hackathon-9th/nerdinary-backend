@@ -10,7 +10,7 @@ class SnapRepository {
   }
 
   async findParticipation(challengeId, userId) {
-    return await prisma.challengeParticipant.findFirst({
+    return await prisma.challengeParticipant.findUnique({
         where: { challengeId, userId }
     });
   }
@@ -34,7 +34,6 @@ class SnapRepository {
   async findSnapsByChallenge(challengeId) {
     return await prisma.snap.findMany({
         where: { challengeId },
-        orderBy: { createdAt: "desc" },
         select: {
             id: true,
             imageUrl: true,
@@ -45,7 +44,6 @@ class SnapRepository {
   async findSnapsByUser(userId) {
     return await prisma.snap.findMany({
         where: { userId },
-        orderBy: { createdAt: "desc" }
     });
   }
 
@@ -56,13 +54,11 @@ class SnapRepository {
   async findSnapsBySnap(snapId) {
     return await prisma.snap.findFirst({
         where: { id: snapId },
-        orderBy: { createdAt: "desc" },
         include: {
             user: {
               select: { nickname: true }
             }
-        },
-        orderBy: { createdAt: "desc" }
+        }
     }); 
   }
 }
