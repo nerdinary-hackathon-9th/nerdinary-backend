@@ -48,6 +48,7 @@ class WrongUserInfo extends CustomError {
 }
 
 export {
+    CustomError,
     NotFoundError,
     NotFoundUserError,
     BadRequestError,
