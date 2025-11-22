@@ -10,7 +10,7 @@ export async function findAllChallenges() {
 }
 
 // 옵션 리스트 (popular, latest)
-export async function findChallengeListWithOptions({ latest}) {
+export async function findChallengeListWithOptions({ popular, latest }) {
   const orderBy = [];
 
   if (popular === 'true' || popular === 'false') {
