@@ -8,7 +8,7 @@ servers:
   - description: "Nerdinary 9th Team D Local Server"
     url: http://localhost:3000/docs
   - description: "Nerdinary 9th Team D Production Server"
-    url: http://3.34.50.209:3000/api
+    url: http://3.34.50.209:3000
 
 paths:
   /api/auth/signup:
