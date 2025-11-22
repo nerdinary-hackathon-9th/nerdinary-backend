@@ -27,7 +27,7 @@ export async function getChallenges(req, res, next) {
 // GET /challenge/list?popular=true&latest=new
 export async function getChallengeList(req, res, next) {
   try {
-    const { popular = 'false', latest } = req.query;  // 선택 전 -> 인기순x
+    const { popular, latest } = req.query;  // popular: 'true' | 'false' | undefined
     const challenges = await findChallengeListWithOptions({ popular, latest });
     return successHandler(res, '챌린지 리스트 정렬 성공', challenges);
   } catch (err) {

@@ -11,20 +11,22 @@ export async function findAllChallenges() {
 
 // 옵션 리스트 (popular, latest)
 export async function findChallengeListWithOptions({ latest}) {
-  const orderBy = {};
+  const orderBy = [];
 
-  if (popular === 'true') {
+  if (popular === 'true' || popular === 'false') {
+    const popularityOrder = popular === 'true' ? 'desc' : 'asc';
+    
     orderBy.push({
       participants: {
-        _count: 'desc',
+        _count: popularityOrder,
       },
     });
   }
 
   if (latest === 'new') {
-    orderBy.createdAt = 'desc';
+    orderBy.push({ createdAt: 'desc' });
   } else {
-    orderBy.createdAt = 'asc';
+    orderBy.push({ createdAt: 'asc' });
   }
 
   return prisma.challenge.findMany({
