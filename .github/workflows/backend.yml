@@ -1,0 +1,82 @@
+name: Backend EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Node.js to AWS EC2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: SSH to EC2 and Deploy
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          BACKEND_ENV: ${{ secrets.BACKEND_ENV }}
+
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          ssh -o StrictHostKeyChecking=no $EC2_USER@$EC2_HOST << 'EOF'
+
+            # EC2 서버에 배포된 Node.js 애플리케이션 위치로 이동
+            cd /home/ubuntu/Node
+
+            # git 충돌 방지
+            git reset --hard HEAD
+            git clean -fd
+            git pull origin main
+
+            # backend.env 전체 적용
+            echo "$BACKEND_ENV" > .env
+
+            # Prisma 마이그레이션
+            if [ -f "prisma/schema.prisma" ]; then
+              echo "Running Prisma migrations..."
+              npx prisma migrate deploy
+            else
+              echo "Prisma schema not found. Skipping migrations..."
+            fi
+
+            # 최신 코드 pull
+            git pull origin main
+
+            # 종속성 설치
+            npm install
+
+            # mysql 실행 확인 (안되어 있으면 시작)
+            if systemctl is-active --quiet mysql; then
+              echo "MySQL is running."
+            else
+              echo "MySQL is not running. Starting MySQL..."
+              sudo systemctl start mysql
+            fi
+
+            # app 실행 확인 (안되어 있으면 시작)
+            if pm2 describe "app" > /dev/null; then
+              echo "App is already running, reloading it..."
+              pm2 reload all
+            else
+              echo "App is not running, starting it..."
+              pm2 start /home/ubuntu/nerdinary-backend/src/index.js --name "app" --env DATABASE_URL="$DATABASE_URL" --env MYSQL_ROOT_PASSWORD="$MYSQL_ROOT_PASSWORD"
+            fi
+
+            pm2 save
+          EOF
