@@ -27,8 +27,8 @@ export async function getChallenges(req, res, next) {
 // GET /challenge/list?popular=true&latest=new
 export async function getChallengeList(req, res, next) {
   try {
-    const { popular, latest } = req.query;
-    const challenges = await findChallengeListWithOptions({ popular, latest });
+    const { latest } = req.query;
+    const challenges = await findChallengeListWithOptions({ latest });
     return successHandler(res, '챌린지 리스트 조회 성공', challenges);
   } catch (err) {
     return next(err);
@@ -38,7 +38,8 @@ export async function getChallengeList(req, res, next) {
 // GET /challenge/:challengeId
 export async function getChallengeById(req, res, next) {
   try {
-    const { challengeId } = req.params;
+    const  challengeId  = Number(req.params.challengeId);
+
     const challenge = await findChallengeById(challengeId);
 
     if (!challenge) {
@@ -73,26 +74,13 @@ export async function createChallenge(req, res, next) {
   }
 }
 
-// DELETE /challenge/:challengeId
-export async function deleteChallenge(req, res, next) {
-  try {
-    const { challengeId } = req.params;
-    const deleted = await deleteChallengeRepo(challengeId);
-
-    if (!deleted) {
-      throw new NotFoundError('챌린지를 찾을 수 없습니다.');
-    }
-
-    return successHandler(res, '챌린지 삭제 성공', null);
-  } catch (err) {
-    return next(err);
-  }
-}
-
 // GET /challenge/:challengeId/participants
 export async function getChallengeParticipants(req, res, next) {
   try {
-    const { challengeId } = req.params;
+    console.log(req.params);
+    const  challengeId  = Number(req.params.challengeId);
+    console.log("controller: ",challengeId);
+
     const participants = await findParticipantsByChallengeId(challengeId);
 
     return successHandler(res, '챌린지 참가자 목록 조회 성공', participants);

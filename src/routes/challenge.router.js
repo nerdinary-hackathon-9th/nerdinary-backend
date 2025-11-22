@@ -4,7 +4,6 @@ import {
   getChallengeList,
   getChallengeById,
   createChallenge,
-  deleteChallenge,
   getChallengeParticipants,
 } from '../controllers/challenge.controller.js';
 
@@ -24,6 +23,5 @@ router.get('/:challengeId/participants', getChallengeParticipants);
 
 // 단건 조회 / 삭제
 router.get('/:challengeId', getChallengeById);
-router.delete('/:challengeId', deleteChallenge);
 
 export default router;
