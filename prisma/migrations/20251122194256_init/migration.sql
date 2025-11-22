@@ -26,8 +26,8 @@ CREATE TABLE `challenge_participant` (
     `id` INTEGER NOT NULL AUTO_INCREMENT,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `imageUrl` VARCHAR(191) NULL,
-    `title` VARCHAR(191) NOT NULL,
-    `content` VARCHAR(191) NOT NULL,
+    `title` VARCHAR(191) NULL,
+    `content` VARCHAR(191) NULL,
     `userId` INTEGER NOT NULL,
     `challengeId` INTEGER NOT NULL,
 
