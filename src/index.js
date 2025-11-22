@@ -1,13 +1,14 @@
 import express from 'express'
 import dotenv from "dotenv";
 import cors from 'cors';
-import swaggerAutogen from "swagger-autogen";
 import swaggerUi from 'swagger-ui-express'
 import path from 'path';
 import { fileURLToPath } from 'url';
 import YAML from 'yamljs';
+
 import SnapRouter from './routes/snap.router.js'
 import { errorHandler } from './middlewares/errorHandler.js';
+import routers from './routes/routes.index.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,11 +26,8 @@ app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형
 const swaggerDocument = YAML.load(path.join(__dirname, 'swagger/swagger.yml'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
-// // Router 연결
-// app.use("/", (req, res) => {
-//   res.send("서버 연결 성공!");
-// });
-
+// // Router 연결]
+app.use("/",routers);
 app.use("/api/snap", SnapRouter);
 
 //전역 오류 처리 미들웨어
