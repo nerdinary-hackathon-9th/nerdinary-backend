@@ -30,7 +30,6 @@ class SnapService {
       ...dto
     };
 
-    // 응답 dto로 변경 필요 
     return await snapRepository.createSnap(snapData);
   }
 
