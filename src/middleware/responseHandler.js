@@ -5,4 +5,3 @@ export function successHandler(res, message = '성공', data = null) {
       data
     });
 }
-  
