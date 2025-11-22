@@ -1,16 +1,29 @@
-import { Router } from "express";
-import { handleChallenge } from "../controllers/challenge.controller.js";
+import express from 'express';
+import {
+  getChallenges,
+  getChallengeList,
+  getChallengeById,
+  createChallenge,
+  deleteChallenge,
+  getChallengeParticipants,
+} from '../controllers/challenge.controller.js';
 
-const router = Router();
+const router = express.Router();
 
-router.get("/", );
+// 기본 리스트
+router.get('/challenge', getChallenges);
 
-// 챌린지 생성
+// 옵션 리스트
+router.get('/challenge/list', getChallengeList);
 
-// 챌린지 삭제
+// 생성
+router.post('/challenge/create', createChallenge);
 
-// 특정 챌린지 조회
+// 참가자 목록
+router.get('/challenge/:challengeId/participants', getChallengeParticipants);
 
-// 챌린지 리스트 조회
+// 단건 조회 / 삭제
+router.get('/challenge/:challengeId', getChallengeById);
+router.delete('/challenge/:challengeId', deleteChallenge);
 
-export default routers;
+export default router;

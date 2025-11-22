@@ -1,9 +1,8 @@
 import { Router } from "express";
+import challengeRouter from './challenge.router.js';
 
-import challengeRouter from "./challenge.router.js";
+const router = Router();
 
-const routers = Router();
+router.use("/", challengeRouter);
 
-// routers.use("/api/v1/challenge", challengeRouter);
-
-export default routers;
+export default router;

@@ -42,6 +42,7 @@ class InternalServerError extends CustomError {
 }
 
 export {
+    CustomError,
     NotFoundError,
     NotFoundUserError,
     BadRequestError,

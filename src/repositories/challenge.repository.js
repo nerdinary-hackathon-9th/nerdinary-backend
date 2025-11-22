@@ -1,114 +1,69 @@
-const prisma = require('../lib/prisma');
+import { PrismaClient } from '@prisma/client';
 
-function toBigInt(idStr) {
-    try {
-        return BigInt(idStr);
-    } catch {
-        return null;
-    }
+const prisma = new PrismaClient();
+
+// 기본 챌린지 리스트
+export async function findAllChallenges() {
+  return prisma.challenge.findMany({
+    orderBy: { createdAt: 'desc' },
+  });
 }
 
-// 기본 챌린지 리스트 (정렬 X)
-async function findAllChallenges() {
-    return prisma.challenge.findMany({
-        orderBy: { createdAt: 'desc' },
-    });
+// 옵션 리스트 (popular, latest)
+export async function findChallengeListWithOptions({ popular, latest }) {
+  // 일단은 createdAt 기준 정렬만, 나중에 popular 로직 추가 가능
+  const orderBy = {};
+
+  if (latest === 'new') {
+    orderBy.createdAt = 'desc';
+  } else {
+    orderBy.createdAt = 'asc';
+  }
+
+  return prisma.challenge.findMany({ orderBy });
 }
 
-// 챌린지 리스트 (정렬 O)
-async function findChallengeListWithOptions({ popular, latest }) {
-    const orderBy = [];
+// 단일 챌린지 조회
+export async function findChallengeById(challengeId) {
+  const id = BigInt(challengeId);
 
-    // 인기순 정렬
-    if (popular === 'true') {
-        orderBy.push({ participants: { _count: 'desc'} });
-    }
-
-    // 최신순 정렬
-    if (latest == 'new') {
-        orderBy.push({ createdAt: 'desc' });
-    }
-
-    if (orderBy.length === 0) {
-        orderBy.push({ createdAt: 'desc' });
-    }
-
-    return prisma.challenge.findMany({
-        orderBy,
-        include: {
-            _count: {
-                select: { participants: true },
-            },
-        },
-    });
-}
-
-// 특정 챌린지 조회
-async function findChallengeById(challengeId) {
-    const id = toBigInt(challengeId);
-    if (id === null) return null;
-
-    return prisma.challenge.findUnique({
-        where: { id },
-        include: {
-            _count: { select: { participants: true }},
-        },
-    });
+  return prisma.challenge.findUnique({
+    where: { id },
+  });
 }
 
 // 챌린지 생성
-async function createChallenge({ title, context, endAt, thumnailUrl }) {
-    const data = {
-        title,
-        context: context ?? null,
-        thumnailUrl: thumnailUrl ?? null,
-    };
-
-    if (endAt) {
-        const endAtDate = new Date(endAt);
-        if (!Number.isNaN(endAtDate.getTime())) {
-            data.endAt = endAtDate;
-        }
-    }
-
-    return prisma.challenge.create({ data });
+export async function createChallenge({ title, context, endAt, thumbnailUrl }) {
+  return prisma.challenge.create({
+    data: {
+      title,
+      context,
+      endAt: endAt ? new Date(endAt) : null,
+      thumbnailUrl: thumbnailUrl ?? null,
+    },
+  });
 }
 
 // 챌린지 삭제
-async function deleteChallenge(challengeId) {
-    const id = toBigInt(challengeId);
-    if (id === null) return null;
+export async function deleteChallenge(challengeId) {
+  const id = BigInt(challengeId);
 
-    return prisma.challenge.delete({
-        where: { id },
-    });
+  // 먼저 존재 여부 확인
+  const existing = await prisma.challenge.findUnique({ where: { id } });
+  if (!existing) return null;
+
+  await prisma.challenge.delete({ where: { id } });
+  return true;
 }
 
-// 특정 챌린지 참가자 목록
-async function findParticipantsByChallengeId(challengeId) {
-    const id = toBigInt(challengeId);
-    if (id === null) return [];
+// 참가자 목록 조회 (지금은 단순 findMany, 나중에 User join 가능)
+export async function findParticipantsByChallengeId(challengeId) {
+  const id = BigInt(challengeId);
 
-    return prisma.challengeParticipant.findMany({
-        where: { challengeId: id },
-        include: {
-            user: {
-                select: {
-                    id: true,
-                    nickname: true,
-                    createdAt: true,
-                },
-            },
-        },
-        orderBy: { createdAt: 'asc' },
-    });
-}
-
-module.exports = {
-    findAllChallenges,
-    findChallengeListWithOptions,
-    findChallengeById,
-    createChallenge,
-    deleteChallenge,
-    findParticipantsByChallengeId,
+  return prisma.challengeParticipant.findMany({
+    where: { challengeId: id },
+    include: {
+      user: true,
+    },
+  });
 }

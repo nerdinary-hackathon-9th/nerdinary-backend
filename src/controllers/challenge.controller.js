@@ -1,31 +1,102 @@
-const challengeRepo = require('../repositories/challenge.repository');
-import { successHandler } from "../middlewares/responseHandler.js";
+import {
+  BadRequestError,
+  NotFoundError,
+} from '../errors.js';
 
-// GET /api/challenge
-async function getChallenges(req, res) {
-    try {
-        const challenges = await challengeRepo.findAllChallenges();
-        res.json({ success: true, data: challenges });
-    } catch (err) {
-        console.error('getChallenges error: ', err);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+import {
+  findAllChallenges,
+  findChallengeListWithOptions,
+  findChallengeById,
+  createChallenge as createChallengeRepo,
+  deleteChallenge as deleteChallengeRepo,
+  findParticipantsByChallengeId,
+} from '../repositories/challenge.repository.js';
+
+import { successHandler } from '../middleware/responseHandler.js';
+
+// GET /challenge  - 기본 챌린지 리스트
+export async function getChallenges(req, res, next) {
+  try {
+    const challenges = await findAllChallenges();
+    return successHandler(res, '챌린지 리스트 조회 성공', challenges);
+  } catch (err) {
+    return next(err);
+  }
 }
 
-// GET /api/challenge/list
-async function getChallengeList(req, res) {
-    try {
-        const { popular, latest } = req.query;
-        const challenges = await challengeRepo.findChallengeListWithOptions({
-            popular,
-            latest,
-        });
-
-        res.json({ success: true, data: challenges });
-    } catch (err) {
-        console.error('getChallengeList error: ', err);
-        res.status(500).json({ success: false, message: 'Internal server error' });
-    }
+// GET /challenge/list?popular=true&latest=new
+export async function getChallengeList(req, res, next) {
+  try {
+    const { popular, latest } = req.query;
+    const challenges = await findChallengeListWithOptions({ popular, latest });
+    return successHandler(res, '챌린지 리스트 조회 성공', challenges);
+  } catch (err) {
+    return next(err);
+  }
 }
 
-// // GET /api/challenge/:challengeId
+// GET /challenge/:challengeId
+export async function getChallengeById(req, res, next) {
+  try {
+    const { challengeId } = req.params;
+    const challenge = await findChallengeById(challengeId);
+
+    if (!challenge) {
+      throw new NotFoundError('챌린지를 찾을 수 없습니다.');
+    }
+
+    return successHandler(res, '챌린지 조회 성공', challenge);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+// POST /challenge/create
+export async function createChallenge(req, res, next) {
+  try {
+    const { title, context, endAt, thumbnailUrl } = req.body;
+
+    if (!title || typeof title !== 'string') {
+      throw new BadRequestError('title은 필수입니다.');
+    }
+
+    const created = await createChallengeRepo({
+      title,
+      context,
+      endAt,
+      thumbnailUrl,
+    });
+
+    return successHandler(res, '챌린지 생성 성공', created);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+// DELETE /challenge/:challengeId
+export async function deleteChallenge(req, res, next) {
+  try {
+    const { challengeId } = req.params;
+    const deleted = await deleteChallengeRepo(challengeId);
+
+    if (!deleted) {
+      throw new NotFoundError('챌린지를 찾을 수 없습니다.');
+    }
+
+    return successHandler(res, '챌린지 삭제 성공', null);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+// GET /challenge/:challengeId/participants
+export async function getChallengeParticipants(req, res, next) {
+  try {
+    const { challengeId } = req.params;
+    const participants = await findParticipantsByChallengeId(challengeId);
+
+    return successHandler(res, '챌린지 참가자 목록 조회 성공', participants);
+  } catch (err) {
+    return next(err);
+  }
+}
