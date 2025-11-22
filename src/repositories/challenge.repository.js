@@ -11,8 +11,15 @@ export async function findAllChallenges() {
 
 // 옵션 리스트 (popular, latest)
 export async function findChallengeListWithOptions({ latest}) {
-  // 일단은 createdAt 기준 정렬만, 나중에 popular 로직 추가 가능
   const orderBy = {};
+
+  if (popular === 'true') {
+    orderBy.push({
+      participants: {
+        _count: 'desc',
+      },
+    });
+  }
 
   if (latest === 'new') {
     orderBy.createdAt = 'desc';
@@ -20,7 +27,14 @@ export async function findChallengeListWithOptions({ latest}) {
     orderBy.createdAt = 'asc';
   }
 
-  return prisma.challenge.findMany({ orderBy });
+  return prisma.challenge.findMany({
+    orderBy,
+    include: {
+      _count: {
+        select: { participants: true },
+      },
+    },
+  });
 }
 
 // 단일 챌린지 조회
