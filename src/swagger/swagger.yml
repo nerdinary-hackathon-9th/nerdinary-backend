@@ -728,7 +728,6 @@ components:
       properties:
         id:
           type: integer
-<<<<<<< HEAD
           example: 1
         title:
           type: string
@@ -828,7 +827,6 @@ components:
         createdAt:
           type: string
           format: date-time
->>>>>>> 60f376cc2e317e0bb1dc1afeb743437eb020ad6a
 
     User:
       type: object
