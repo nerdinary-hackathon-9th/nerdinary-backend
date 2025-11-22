@@ -6,7 +6,7 @@ info:
 
 servers:
   - description: "Nerdinary 9th Team D Production Server"
-    url: http://sihang.kro.kr
+    url: https://sihang.kro.kr
   - description: "Nerdinary 9th Team D Local Server"
     url: http://localhost:3000/docs
 
