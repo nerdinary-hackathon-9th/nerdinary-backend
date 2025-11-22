@@ -12,7 +12,7 @@ class SnapController {
 
       const data = JSON.parse(req.body.data);
 
-      const newSnap = await snapService.createSnap(challengeId, userId, dto, req.files);
+      const newSnap = await snapService.createSnap(challengeId, userId, data, req.files);
       return successHandler(res, "리뷰 생성 완료", newSnap);
     } catch (err) {
       next(err);
