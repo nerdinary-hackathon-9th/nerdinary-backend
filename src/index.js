@@ -2,8 +2,13 @@ import express from 'express'
 import dotenv from "dotenv";
 import cors from 'cors';
 import swaggerAutogen from "swagger-autogen";
-import swaggerUiExpress from "swagger-ui-express";
-import routers from './routes/routes.index.js';
+import swaggerUi from 'swagger-ui-express'
+import path from 'path';
+import { fileURLToPath } from 'url';
+import YAML from 'yamljs';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 dotenv.config();
 
@@ -49,36 +54,8 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.use(
-  "/docs",
-  swaggerUiExpress.serve,
-  swaggerUiExpress.setup({}, {
-    swaggerOptions: {
-      url: "/openapi.json",
-    },
-  })
-);
-
-app.get("/openapi.json", async (req, res, next) => {
-  // #swagger.ignore = true
-  const options = {
-    openapi: "3.0.0",
-    disableLogs: true,
-    writeOutputFile: false,
-  };
-  const outputFile = "/dev/null"; // 파일 출력은 사용하지 않습니다.
-  const routes = ["./src/index.js"];
-  const doc = {
-    info: {
-      title: "Nerdinary Team D",
-      description: "Nerdinary 9th Team D 프로젝트입니다.",
-    },
-    host: "localhost:3000",
-  };
-
-  const result = await swaggerAutogen(options)(outputFile, routes, doc);
-  res.json(result ? result.data : null);
-});
+const swaggerDocument = YAML.load(path.join(__dirname, 'swagger/swagger.yml'));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 // Router 연결
 app.use("/", routers);

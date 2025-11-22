@@ -1,0 +1,37 @@
+openapi: 3.0.0
+info:
+  title: Nerdinary 9th Team D
+  version: 1.0.0
+  description: "Nerdinary 9th Team D 프로젝트입니다."
+
+servers:
+  - description: "Nerdinary 9th Team D Local Server"
+    url: http://localhost:3000/docs
+  - description: "Nerdinary 9th Team D Production Server"
+    url: http://3.34.50.209/docs
+
+paths:
+  /challenge:
+    get:
+      summary:
+      tags:
+        - Challenge
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Challenge"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
