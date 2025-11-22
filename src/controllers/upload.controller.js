@@ -11,7 +11,7 @@ export const uploadImage = async (req, res, next) => {
 
         const imageUrl = await snapService.uploadImageOnly(req.file);
 
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
             message: "이미지 업로드 성공",
             data: { imageUrl },

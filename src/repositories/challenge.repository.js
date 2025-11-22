@@ -43,6 +43,11 @@ export async function findChallengeListWithOptions({ popular, latest }) {
 export async function findChallengeById(challengeId) {
   return prisma.challenge.findUnique({
     where: { id: challengeId },
+    include: {
+      _count: {
+        select: { participants: true },
+      }
+    }
   });
 }
  

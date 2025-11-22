@@ -46,7 +46,12 @@ export async function getChallengeById(req, res, next) {
       throw new NotFoundError('챌린지를 찾을 수 없습니다.');
     }
 
-    return successHandler(res, '챌린지 조회 성공', challenge);
+    const { _count, ...challengeData } = challenge;
+
+    return successHandler(res, '챌린지 조회 성공', {
+      ...challengeData,
+      participantsCount: _count?.participants ?? 0,
+    });
   } catch (err) {
     return next(err);
   }
