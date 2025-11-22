@@ -53,7 +53,12 @@ class SnapRepository {
   async findSnapsBySnap(snapId) {
     return await prisma.challengeParticipant.findFirst({
         where: { id: snapId },
-        orderBy: { createdAt: "desc" }
+        orderBy: { createdAt: "desc" },
+        include: {
+            user: {
+              select: { nickname: true }
+            }
+          }
     }); 
   }
 }
