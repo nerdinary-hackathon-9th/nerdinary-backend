@@ -5,3 +5,38 @@ generator client {
 datasource db {
   provider = "mysql"
 }
+
+model User {
+  id           BigInt                 @id @default(autoincrement())
+  password     String?
+  nickname     String?
+  email        String?
+  createdAt    DateTime               @default(now())
+  participants ChallengeParticipant[]
+
+  @@map("user")
+}
+
+model Challenge {
+  id           BigInt                 @id @default(autoincrement())
+  title        String?
+  context      String?
+  createdAt    DateTime               @default(now())
+  endAt        DateTime?
+  thumbnailUrl String?
+  participants ChallengeParticipant[]
+
+  @@map("challenge")
+}
+
+model ChallengeParticipant {
+  id          BigInt    @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  imageUrl    String?
+  userId      BigInt
+  challengeId BigInt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@map("challenge_participant")
+}
