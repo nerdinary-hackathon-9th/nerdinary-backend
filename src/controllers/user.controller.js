@@ -3,7 +3,7 @@ import { userCheckNickname, userJoinChallenge, showUserChallenges } from '../ser
 
 export const handleCheckNickname = async (req, res, next) => {
     try {
-        const nickname = req.params.nickname;
+        const nickname = req.query.nickname;
         const isAvailable = await userCheckNickname(nickname);
         return successHandler(res, '닉네임 확인 성공', { isAvailable });
     
