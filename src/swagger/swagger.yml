@@ -3,40 +3,13 @@ info:
   title: Nerdinary 9th Team D API
   version: 1.0.0
   description: |
-    Nerdinary 9th Team D 챌린지 플랫폼 API 문서입니다.
-    
-    ## 주요 기능
-    - 사용자 인증 (회원가입/로그인)
-    - 챌린지 생성 및 참여
-    - 스냅(인증샷) 업로드 및 관리
-    - 챌린지 참가자 조회
-  contact:
-    name: Team D
-    email: team-d@nerdinary.com
-  license:
-    name: MIT
-    url: https://opensource.org/licenses/MIT
+    Nerdinary 9th Team D팀 API 문서입니다.
 
 servers:
   - description: Production Server
     url: https://sihang.kro.kr
   - description: Local Development Server
     url: http://localhost:3000
-
-tags:
-  - name: Auth
-    description: 사용자 인증 관련 API
-  - name: User
-    description: 사용자 정보 관련 API
-  - name: Challenge
-    description: 챌린지 관련 API
-  - name: UserChallenge
-    description: 사용자-챌린지 참여 관련 API
-  - name: Snap
-    description: 스냅(인증샷) 관련 API
-
-security:
-  - bearerAuth: []
 
 paths:
   # ===== Auth APIs =====
@@ -635,7 +608,7 @@ components:
           description: 스냅 제목
           maxLength: 100
           example: "오늘의 운동 완료!"
-        snap:
+        images:
           type: string
           format: binary
           description: 이미지 파일 (JPG, PNG, GIF)
