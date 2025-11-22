@@ -11,41 +11,38 @@ class SnapRepository {
 
   async findParticipation(challengeId, userId) {
     return await prisma.challengeParticipant.findFirst({
-      where: { challengeId, userId }
+        where: { challengeId, userId }
     });
   }
 
   async createSnap(snapData) {
     return await prisma.challengeParticipant.create({
-      data: snapData,
-      include: {
-        user: { select: { id: true, nickname: true } },
-        challenge: { select: { id: true, title: true } }
-      }
+        data: snapData
     });
   }
 
   async findSnapById(snapId) {
     return await prisma.challengeParticipant.findUnique({
-      where: { id: snapId },
-      include: {
-        user: { select: { id: true, nickname: true } },
-        challenge: { select: { id: true, title: true } }
-      }
+        where: { id: snapId },
+        include: {
+            user: { select: { id: true, nickname: true } },
+            challenge: { select: { id: true, title: true } }
+        }
     });
   }
 
   async findSnapsByChallenge(challengeId) {
     return await prisma.challengeParticipant.findMany({
-      where: { challengeId },
-      orderBy: { createdAt: "desc" }
+        where: { challengeId },
+        orderBy: { createdAt: "desc" },
+        select: { imageUrl: true }
     });
   }
 
   async findSnapsByUser(userId) {
     return await prisma.challengeParticipant.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" }
+        where: { userId },
+        orderBy: { createdAt: "desc" }
     });
   }
 
@@ -56,8 +53,13 @@ class SnapRepository {
   async findSnapsBySnap(snapId) {
     return await prisma.challengeParticipant.findFirst({
         where: { id: snapId },
-        orderBy: { createdAt: "desc" }
-      }); 
+        orderBy: { createdAt: "desc" },
+        include: {
+            user: {
+              select: { nickname: true }
+            }
+          }
+    }); 
   }
 }
 
