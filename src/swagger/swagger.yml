@@ -412,3 +412,56 @@ paths:
           description: 존재하지 않는 스냅
         "500":
           description: 서버 내부 오류
+
+  /api/challenge/hot:
+    get:
+      summary: 인기 많은 챌린지 조회 (참가자 100명 이상)
+      tags:
+        - Challenge
+      responses:
+        "200":
+          description: 인기있는 챌린지 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "인기있는 챌린지 조회 성공"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 1
+                        title:
+                          type: string
+                          example: "챌린지 1"
+                        context:
+                          type: string
+                          example: "설명 1"
+                        createdAt:
+                          type: string
+                          format: date-time
+                          example: "2025-11-23T05:18:58.000Z"
+                        endAt:
+                          type: string
+                          format: date-time
+                          example: "2025-12-23T05:18:58.000Z"
+                        thumbnailUrl:
+                          type: string
+                          example: "https://example.com/thumb1.jpg"
+                        _count:
+                          type: object
+                          properties:
+                            participants:
+                              type: integer
+                              example: 197
+        "500":
+          description: 서버 내부 오류
