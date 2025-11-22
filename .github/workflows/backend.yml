@@ -61,14 +61,6 @@ jobs:
             # 종속성 설치
             npm install
 
-            # mysql 실행 확인 (안되어 있으면 시작)
-            if systemctl is-active --quiet mysql; then
-              echo "MySQL is running."
-            else
-              echo "MySQL is not running. Starting MySQL..."
-              sudo systemctl start mysql
-            fi
-
             # app 실행 확인 (안되어 있으면 시작)
             if pm2 describe "app" > /dev/null; then
               echo "App is already running, reloading it..."
