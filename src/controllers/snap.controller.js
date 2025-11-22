@@ -11,7 +11,6 @@ class SnapController {
       const userId = Number(user_id);
 
       const data = JSON.parse(req.body.data);
-      if (!isCreateSnapDTO(data)) {throw new BadRequestError("요청 형식이 잘못됐습니다.")}
 
       const newSnap = await snapService.createSnap(challengeId, userId, dto, req.files);
       return successHandler(res, "리뷰 생성 완료", newSnap);
