@@ -13,6 +13,7 @@ model User {
   nickname     String                 @unique
   createdAt    DateTime               @default(now())
   participants ChallengeParticipant[]
+  snaps        Snap[]
 
   @@map("user")
 }
@@ -25,6 +26,7 @@ model Challenge {
   endAt        DateTime?
   thumbnailUrl String?
   participants ChallengeParticipant[]
+  snaps        Snap[]
 
   @@map("challenge")
 }
@@ -32,13 +34,23 @@ model Challenge {
 model ChallengeParticipant {
   id          Int    @id @default(autoincrement())
   createdAt   DateTime  @default(now())
-  imageUrl    String?
-  title       String
-  content     String
   userId      Int
   challengeId Int
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
 
   @@map("challenge_participant")
+}
+
+model Snap {
+  id          Int    @id @default(autoincrement())
+  imageUrl    String?
+  title       String
+  content     String
+  userId      Int?
+  challengeId Int
+  user        User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+
+  @@map("snap")
 }
