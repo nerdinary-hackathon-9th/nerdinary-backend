@@ -48,7 +48,7 @@ class SnapRepository {
   }
 
   async deleteSnap(snapId) {
-    return await prisma.snap.snap({ where: { id: snapId } });
+    return await prisma.snap({ where: { id: snapId } });
   }
 
   async findSnapsBySnap(snapId) {
