@@ -707,7 +707,63 @@ paths:
               example:
                 success: false
                 message: "서버 내부 오류가 발생했습니다."
-
+  /api/challenge/today:
+    get:
+      summary: 진행중인 챌린지 조회
+      description: 현재 진행중인 챌린지를 조회할 수 있다.
+      tags:
+        - Challenge
+      responses:
+        "200":
+          description: 진행중인 챌린지 조회 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "진행중인 챌린지 조회 성공"
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          example: 12
+                        title:
+                          type: string
+                          example: "챌린지 8"
+                        context:
+                          type: string
+                          example: "챌린지 8 설명"
+                        createdAt:
+                          type: string
+                          format: date-time
+                          example: "2025-11-22T21:06:58.961Z"
+                        endAt:
+                          type: string
+                          format: date-time
+                          example: "2025-12-07T21:06:58.961Z"
+                        thumbnailUrl:
+                          type: string
+                          example: "https://picsum.photos/seed/challenge8/200/200"
+                        _count:
+                          type: object
+                          properties:
+                            participants:
+                              type: integer
+                              example: 12
+        "500":
+          description: 서버 내부 오류
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   schemas:
