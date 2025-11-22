@@ -240,7 +240,7 @@ paths:
                         type: boolean
         "500":
           description: 서버 내부 오류
-  /snap/{challenge_id}/{user_id}:
+  api/snap/{challenge_id}/{user_id}:
     post:
       summary: 스냅 생성
       tags:
@@ -290,7 +290,7 @@ paths:
         "500":
           description: 서버 내부 오류
 
-  /snaps/challenge/{challengeId}:
+  api/snaps/challenge/{challengeId}:
     get:
       summary: 특정 챌린지 별 모든 스냅 조회
       tags:
@@ -319,7 +319,7 @@ paths:
                     items:
                       $ref: "#/components/schemas/SnapImage"
 
-  /snaps/user/{userId}:
+  api/snaps/user/{userId}:
     get:
       summary: 특정 유저별 모든 스냅 조회
       tags:
@@ -348,7 +348,7 @@ paths:
                     items:
                       $ref: "#/components/schemas/Snap"
 
-  /snap/{snapId}:
+  api/snap/{snapId}:
     get:
       summary: 개별 스냅 조회
       tags:
@@ -368,7 +368,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SnapDetail"
 
-  /snap/{snap_id}/{user_id}:
+  api/snap/{snap_id}/{user_id}:
     delete:
       summary: 스냅 삭제
       tags:
