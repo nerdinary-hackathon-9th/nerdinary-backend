@@ -20,19 +20,25 @@
   "homepage": "https://github.com/wldmsdl7/nodejs-deploy-practice#readme",
   "description": "",
   "dependencies": {
-    "@prisma/client": "^7.0.0",
+    "@aws-sdk/client-s3": "^3.937.0",
     "cors": "^2.8.5",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "http-status-codes": "^2.3.0",
+    "multer": "^2.0.2",
     "mysql2": "^3.15.3",
-    "prisma": "^7.0.0",
     "swagger-autogen": "^2.23.7",
     "swagger-cli": "^4.0.4",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "@prisma/client": "^4.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.5",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/yamljs": "^0.2.34",
+    "nodemon": "^3.1.11",
+    "prisma": "^4.0.0"
   }
 }
