@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url = env("DATABASE_URL")
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  id           BigInt                 @id @default(autoincrement())
+  id           Int                 @id @default(autoincrement())
   password     String
   nickname     String                 @unique
   createdAt    DateTime               @default(now())
@@ -18,7 +18,7 @@ model User {
 }
 
 model Challenge {
-  id           BigInt                 @id @default(autoincrement())
+  id           Int                 @id @default(autoincrement())
   title        String?
   context      String?
   createdAt    DateTime               @default(now())
@@ -30,11 +30,13 @@ model Challenge {
 }
 
 model ChallengeParticipant {
-  id          BigInt    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   createdAt   DateTime  @default(now())
   imageUrl    String?
-  userId      BigInt
-  challengeId BigInt
+  title       String?
+  content     String?
+  userId      Int
+  challengeId Int
   user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   challenge   Challenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
 
