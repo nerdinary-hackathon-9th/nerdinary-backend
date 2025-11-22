@@ -767,6 +767,19 @@ paths:
 
 components:
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+          example: "서버 내부 오류가 발생했습니다."
+        statusCode:
+          type: integer
+          example: 500
+
     SnapResponse:
       type: object
       properties:
@@ -787,61 +800,24 @@ components:
           example: 1
         title:
           type: string
-          example: "30일 사진 챌린지"
-        context:
+          example: "첫 인증샷!"
+        content:
+          type: string
+          example: "오늘 운동 완료 인증샷"
+        imageUrl:
           type: string
           nullable: true
-          example: "매일 사진 찍기"
+          example: "https://example.com/snap1.png"
+        userId:
+          type: integer
+          example: 1
+        challengeId:
+          type: integer
+          example: 1
         createdAt:
           type: string
           format: date-time
           example: "2025-11-23T03:26:47.000Z"
-        endAt:
-          type: string
-          format: date-time
-          nullable: true
-          example: "2025-12-23T03:26:47.000Z"
-        thumbnailUrl:
-          type: string
-          nullable: true
-          example: "https://example.com/thumb1.jpg"
-
-    ChallengeCreateRequest:
-      type: object
-      required:
-        - title
-        - endAt
-      properties:
-        title:
-          type: string
-          description: 챌린지 제목
-        context:
-          type: string
-          description: 챌린지 내용
-          nullable: true
-        endAt:
-          type: string
-          format: date-time
-          description: 챌린지 종료 시각 (ISO 8601)
-        thumbnailUrl:
-          type: string
-          description: 썸네일 이미지 URL
-          nullable: true
-        title:
-          type: string
-        content:
-          type: string
-        imageUrl:
-          type: string
-          nullable: true
-        userId:
-          type: integer
-          nullable: true
-        challengeId:
-          type: integer
-        createdAt:
-          type: string
-          format: date-time
 
     SnapImage:
       type: object
@@ -890,13 +866,12 @@ components:
         id:
           type: integer
           example: 1
+        nickname:
+          type: string
+          example: "alice"
         password:
           type: string
           example: "password123"
-        nickname:
-          type: string
-        password:
-          type: string
         createdAt:
           type: string
           format: date-time
@@ -928,29 +903,22 @@ components:
       properties:
         id:
           type: integer
-          example: 1
         createdAt:
           type: string
           format: date-time
-          example: "2025-11-23T03:26:47.000Z"
         imageUrl:
           type: string
           nullable: true
-          example: null
         title:
           type: string
           nullable: true
-          example: null
         content:
           type: string
           nullable: true
-          example: null
         userId:
           type: integer
-          example: 1
         challengeId:
           type: integer
-          example: 1
         user:
           $ref: '#/components/schemas/User'
 
@@ -959,37 +927,16 @@ components:
       properties:
         success:
           type: boolean
-          example: true
         message:
           type: string
-          example: "챌린지 조회 성공"
         data:
           $ref: '#/components/schemas/Challenge'
-
-    ApiResponseChallengeList:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: true
-        message:
-          type: string
-          example: "챌린지 리스트 조회 성공"
-        data:
-          type: array
-          items:
-            $ref: '#/components/schemas/Challenge'
-        message:
-          type: string
-        data:
-          $ref: "#/components/schemas/Challenge"
 
     ApiResponseChallengeParticipants:
       type: object
       properties:
         success:
           type: boolean
-          example: true
         message:
           type: string
         data:
@@ -1002,28 +949,9 @@ components:
       properties:
         success:
           type: boolean
-          example: false
         message:
           type: string
-          example: "에러 메시지"
         data:
           type: array
           items:
-            $ref: "#/components/schemas/Challenge"
-
-    ChallengeCreateRequest:
-      type: object
-      properties:
-        title:
-          type: string
-        context:
-          type: string
-        endAt:
-          type: string
-          format: date-time
-        thumbnailUrl:
-          type: string
-      required:
-        - title
-        - context
-        - endAt
+            $ref: '#/components/schemas/Challenge'
