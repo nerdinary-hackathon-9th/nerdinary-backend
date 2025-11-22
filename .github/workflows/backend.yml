@@ -75,7 +75,7 @@ jobs:
               pm2 reload all
             else
               echo "App is not running, starting it..."
-              pm2 start /home/ubuntu/Node/src/server.js --name "app" --env DATABASE_URL="$DATABASE_URL" --env MYSQL_ROOT_PASSWORD="$MYSQL_ROOT_PASSWORD"
+              pm2 start /home/ubuntu/nerdinary-backend/src/index.js --name "app" --env DATABASE_URL="$DATABASE_URL" --env MYSQL_ROOT_PASSWORD="$MYSQL_ROOT_PASSWORD"
             fi
 
             pm2 save
