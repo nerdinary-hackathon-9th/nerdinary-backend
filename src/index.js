@@ -27,8 +27,8 @@ app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형
 const swaggerDocument = YAML.load(path.join(__dirname, 'swagger/swagger.yml'));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
-// // Router 연결]
-app.use("/",routers);
+// // Router 연결
+app.use("/", routers);
 app.use("/api/snap", SnapRouter);
 
 //전역 오류 처리 미들웨어
