@@ -104,3 +104,24 @@ export async function getHotChallenges() {
 
   return challenges;
 }
+
+export async function getChallengesToday() {
+  const now = new Date();
+
+  const todayChallenges = await prisma.challenge.findMany({
+    where: {
+      createdAt: { lte: now },
+      endAt: { gte: now },
+    },
+    include: {
+      _count: {
+        select: { participants: true },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  return todayChallenges;
+}
