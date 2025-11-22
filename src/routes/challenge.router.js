@@ -5,9 +5,15 @@ import {
   getChallengeById,
   createChallenge,
   getChallengeParticipants,
+  handleGetHotChallenges,
+  handleChallengesToday
 } from '../controllers/challenge.controller.js';
 
 const router = Router();
+
+router.get('/hot', handleGetHotChallenges);
+
+router.get('/today', handleChallengesToday);
 
 // 기본 리스트
 router.get('/', getChallenges);

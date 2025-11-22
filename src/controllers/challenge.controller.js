@@ -10,6 +10,8 @@ import {
   createChallenge as createChallengeRepo,
   deleteChallenge as deleteChallengeRepo,
   findParticipantsByChallengeId,
+  getHotChallenges,
+  getChallengesToday
 } from '../repositories/challenge.repository.js';
 
 import { successHandler } from '../middleware/responseHandler.js';
@@ -90,6 +92,24 @@ export async function getChallengeParticipants(req, res, next) {
 
     return successHandler(res, '챌린지 참가자 목록 조회 성공', participants);
   } catch (err) {
+    return next(err);
+  }
+}
+
+export async function handleGetHotChallenges (req, res, next) {
+    try{
+        const hotChallenges = await getHotChallenges();
+        return successHandler(res, '인기있는 챌린지 조회 성공', hotChallenges);
+    }catch (err) {
+    return next(err);
+  }
+}
+
+export async function handleChallengesToday (req, res, next) {
+    try{
+        const todayChallenges = await getChallengesToday();
+        return successHandler(res, '진행중인 챌린지 조회 성공', todayChallenges);
+    }catch (err) {
     return next(err);
   }
 }

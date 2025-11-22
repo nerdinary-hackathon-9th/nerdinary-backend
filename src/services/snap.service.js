@@ -35,7 +35,7 @@ class SnapService {
 
   async uploadImage(file, challengeId, userId) {
     try {
-      const key = `sihaeng-bucket/challenge_${challengeId}/user_${userId}`;
+      const key = `sihaeng-bucket/snap/challenge_${challengeId}/user_${userId}`;
       const imageUrl = await uploadToS3(file.buffer, key, file.mimetype);
       return imageUrl;
     } catch (err) {

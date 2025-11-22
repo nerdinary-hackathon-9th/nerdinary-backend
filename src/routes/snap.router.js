@@ -4,6 +4,9 @@ import multer from "multer";
 
 const router = express.Router();
 
+// 특정 인증샷 조회
+router.get("/:snap_id", SnapController.getSnapBySnapId);
+
 // Multer 설정- 인증샷 이미지 업로드 미들웨어
 const upload = multer({ storage: multer.memoryStorage() });
 const uploadReviewImages = upload.array("images");
@@ -19,8 +22,5 @@ router.get("/challenge/:challenge_id", SnapController.getSnapsByChallenge);
 
 // 특정 유저 인증샷 조회
 router.get("/user/:user_id", SnapController.getSnapByUserId);
-
-// 특정 인증샷 조회
-router.get("/:snap_id", SnapController.getSnapBySnapId);
 
 export default router;

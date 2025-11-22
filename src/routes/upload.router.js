@@ -5,10 +5,6 @@ import { uploadImage }  from "../controllers/upload.controller.js";
 const router = express.Router();
 
 // POST /upload/image
-router.post(
-    "/image",
-    upload.single("image"),
-    uploadImage
-);
+router.post("/image", upload.single("image"), uploadImage);
 
 export default router;

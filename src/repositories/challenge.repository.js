@@ -83,3 +83,50 @@ export async function findParticipantsByChallengeId(challengeId) {
     },
   });
 }
+
+export async function getHotChallenges() {
+  const grouped = await prisma.challengeParticipant.groupBy({
+    by: ['challengeId'],
+    _count: { userId: true },
+    having: { userId: { _count: { gte: 100 } } },
+    orderBy: {
+      _count: {
+        userId: 'desc', // 참여자 많은 순
+      }
+    },
+    take: 6 // 상위 6개만
+  });
+
+  const challengeIds = grouped.map(g => g.challengeId);
+
+  const challenges = await prisma.challenge.findMany({
+    where: { id: { in: challengeIds } },
+    include: {
+      _count: { select: { participants: true } },
+    },
+    orderBy: { id: 'asc' } 
+  });
+
+  return challenges;
+}
+
+export async function getChallengesToday() {
+  const now = new Date();
+
+  const todayChallenges = await prisma.challenge.findMany({
+    where: {
+      createdAt: { lte: now },
+      endAt: { gte: now },
+    },
+    include: {
+      _count: {
+        select: { participants: true },
+      },
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  });
+
+  return todayChallenges;
+}
