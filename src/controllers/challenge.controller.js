@@ -14,7 +14,7 @@ import {
   getChallengesToday
 } from '../repositories/challenge.repository.js';
 
-import { successHandler } from '../middleware/responseHandler.js';
+import { successHandler } from '../middlewares/responseHandler.js';
 
 // GET /challenge  - 기본 챌린지 리스트
 export async function getChallenges(req, res, next) {

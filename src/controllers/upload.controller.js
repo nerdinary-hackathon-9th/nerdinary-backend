@@ -1,8 +1,6 @@
 import snapService  from "../services/snap.service.js";
 import { BadRequestError } from "../errors.js";
 
-//import { successHandler } from '../middleware/responseHandler.js';
-
 export const uploadImage = async (req, res, next) => {
     try {
         if (!req.file) {

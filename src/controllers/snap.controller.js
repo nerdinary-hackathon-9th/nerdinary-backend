@@ -10,13 +10,8 @@ class SnapController {
       const challengeId = Number(challenge_id);
       const userId = Number(user_id);
 
-      const { title, content } = req.body;
-
-      if (!title) {
-        throw new BadRequestError("스냅 제목(title)은 필수입니다.");
-      }
-
-      const dto = { title, content };
+      const dto = JSON.parse(req.body.data);
+      if (!isCreateSnapDTO(dto)) {throw new BadRequestError("요청 형식이 잘못됐습니다.")}
 
       const newSnap = await snapService.createSnap(challengeId, userId, dto, req.files);
       return successHandler(res, "리뷰 생성 완료", newSnap);
@@ -68,7 +63,7 @@ class SnapController {
         const snpaId = Number(snap_id);
 
         const snap = await snapService.getSnapsBySnapId(snpaId);
-        return successHandler(res, `${snap.id} 인증샷 조회 완료`, snap);
+        return successHandler(res, `${snap.id}번 인증샷 조회 완료`, snap);
     } catch (err) {
         next(err);
     }

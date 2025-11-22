@@ -1,10 +1,9 @@
 import { userSignup, userLogin } from "../services/auth.service.js"
-import { successHandler } from "../middleware/responseHandler.js";
+import { successHandler } from "../middlewares/responseHandler.js";
 
+// POST /api/auth/login
 export const handleLogin = async (req, res, next) => {
     try {
-        console.log(req.body);
-
         const nickname = req.body.nickname;
         const password = req.body.password;
 
@@ -16,10 +15,9 @@ export const handleLogin = async (req, res, next) => {
     }
 };
 
+// POST /api/auth/signup
 export const handleSignup = async (req, res, next) => {
     try {
-        console.log(req.body);
-
         const nickname = req.body.nickname;
         const password = req.body.password;
 

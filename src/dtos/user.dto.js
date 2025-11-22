@@ -1,6 +1,5 @@
 export const challengeResponseDTO = (data) => {
     return {
-        id: data.id,
-        
+        id: data.id
     }
 }

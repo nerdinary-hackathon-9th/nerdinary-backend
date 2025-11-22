@@ -1,4 +1,4 @@
-import { successHandler } from '../middleware/responseHandler.js';
+import { successHandler } from '../middlewares/responseHandler.js';
 import { userCheckNickname, userJoinChallenge, showUserChallenges } from '../services/user.service.js'
 
 export const handleCheckNickname = async (req, res, next) => {
@@ -28,7 +28,7 @@ export const handleGetMyChallenges = async (req, res, next) => {
     try {
         const userId = parseInt(req.params.userId, 10);
         const userChallenges = await showUserChallenges(userId);
-       return successHandler(res, '사용자 챌린지 조회 성공', { userChallenges });
+        return successHandler(res, '사용자 챌린지 조회 성공', { userChallenges });
 
     }catch (err) {
         next(err);
