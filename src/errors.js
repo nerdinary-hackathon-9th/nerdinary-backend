@@ -41,11 +41,18 @@ class InternalServerError extends CustomError {
     }
 }
 
+class WrongUserInfo extends CustomError {
+    constructor(message='정보 일치하지 않음'){
+        super(message, 401);
+    }
+}
+
 export {
     CustomError,
     NotFoundError,
     NotFoundUserError,
     BadRequestError,
     InternalServerError,
-    ExistsError
+    ExistsError,
+    WrongUserInfo
 };

@@ -1,7 +1,6 @@
 import express from 'express'
 import dotenv from "dotenv";
 import cors from 'cors';
-import swaggerAutogen from "swagger-autogen";
 import swaggerUi from 'swagger-ui-express'
 import path from 'path';
 import { fileURLToPath } from 'url';
