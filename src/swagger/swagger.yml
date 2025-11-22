@@ -5,10 +5,10 @@ info:
   description: "Nerdinary 9th Team D 프로젝트입니다."
 
 servers:
+  - description: "Nerdinary 9th Team D Production Server"
+    url: http://sihang.kro.kr
   - description: "Nerdinary 9th Team D Local Server"
     url: http://localhost:3000/docs
-  - description: "Nerdinary 9th Team D Production Server"
-    url: https://sihang.kro.kr
 
 paths:
   /api/auth/signup:
@@ -240,7 +240,7 @@ paths:
                         type: boolean
         "500":
           description: 서버 내부 오류
-  api/snap/{challenge_id}/{user_id}:
+  /api/snap/{challenge_id}/{user_id}:
     post:
       summary: 스냅 생성
       tags:
@@ -290,7 +290,7 @@ paths:
         "500":
           description: 서버 내부 오류
 
-  api/snaps/challenge/{challengeId}:
+  /api/snaps/challenge/{challengeId}:
     get:
       summary: 특정 챌린지 별 모든 스냅 조회
       tags:
@@ -319,7 +319,7 @@ paths:
                     items:
                       $ref: "#/components/schemas/SnapImage"
 
-  api/snaps/user/{userId}:
+  /api/snaps/user/{userId}:
     get:
       summary: 특정 유저별 모든 스냅 조회
       tags:
@@ -348,7 +348,7 @@ paths:
                     items:
                       $ref: "#/components/schemas/Snap"
 
-  api/snap/{snapId}:
+  /api/snap/{snapId}:
     get:
       summary: 개별 스냅 조회
       tags:
@@ -368,7 +368,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/SnapDetail"
 
-  api/snap/{snap_id}/{user_id}:
+  /api/snap/{snap_id}/{user_id}:
     delete:
       summary: 스냅 삭제
       tags:
@@ -465,7 +465,7 @@ paths:
                               example: 197
         "500":
           description: 서버 내부 오류
-  /challenge/create:
+  /api/challenge/create:
     post:
       summary: 챌린지 생성 API
       description: 챌린지를 처음 생성하는 API입니다.
@@ -518,7 +518,7 @@ paths:
                 success: false
                 message: "서버 내부 오류가 발생했습니다."
 
-  /challenge/{challengeId}:
+  /api/challenge/{challengeId}:
     get:
       summary: 특정 챌린지 조회 API
       description: challengeId를 기반으로 특정 챌린지를 조회합니다.
@@ -567,7 +567,7 @@ paths:
                 success: false
                 message: "서버 내부 오류가 발생했습니다."
 
-  /challenge/{challengeId}/participants:
+  /api/challenge/{challengeId}/participants:
     get:
       summary: 특정 챌린지 참가자 목록 조회 API
       description: 특정 챌린지에 참가한 참가자 목록을 조회합니다.
@@ -625,7 +625,7 @@ paths:
                 success: false
                 message: "서버 내부 오류가 발생했습니다."
 
-  /challenge/list:
+  /api/challenge/list:
     get:
       summary: 챌린지 리스트 정렬 API
       description: |
