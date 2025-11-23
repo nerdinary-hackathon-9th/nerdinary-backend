@@ -24,6 +24,7 @@ app.use(cors({
     'https://sihang.kro.kr',
     'http://localhost:3000'
   ],
+  credentials: true
 }));
 app.use(express.static('public'));          // 정적 파일 접근
 app.use(express.json());                    // request의 본문을 json으로 해석할 수 있도록 함 (JSON 형태의 요청 body를 파싱하기 위함)
