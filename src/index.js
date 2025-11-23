@@ -20,7 +20,7 @@ const port = process.env.PORT;
 app.use(cors({
   origin: [
     'http://localhost:5173',
-    'https://nerdinary-front.vercel.app/',
+    'https://nerdinary-front.vercel.app',
     'https://sihang.kro.kr',
     'http://localhost:3000'
   ],
