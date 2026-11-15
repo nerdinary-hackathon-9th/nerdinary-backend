@@ -4,7 +4,10 @@ import {
   getChallengeList,
   getChallengeById,
   createChallenge,
+  updateChallenge,
+  deleteChallengeById,
   getChallengeParticipants,
+  getMyChallenges,
   handleGetHotChallenges,
   handleChallengesToday
 } from '../controllers/challenge.controller.js';
@@ -24,10 +27,15 @@ router.get('/list', getChallengeList);
 // 생성
 router.post('/create', createChallenge);
 
+// 내가 만든 챌린지
+router.get('/user/:userId/created', getMyChallenges);
+
 // 참가자 목록
 router.get('/:challengeId/participants', getChallengeParticipants);
 
-// 단건 조회 / 삭제
+// 단건 조회 / 수정 / 삭제
 router.get('/:challengeId', getChallengeById);
+router.put('/:challengeId', updateChallenge);
+router.delete('/:challengeId', deleteChallengeById);
 
 export default router;

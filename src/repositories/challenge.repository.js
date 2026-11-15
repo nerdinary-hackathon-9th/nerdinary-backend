@@ -52,24 +52,37 @@ export async function findChallengeById(challengeId) {
 }
  
 // 챌린지 생성
-export async function createChallenge({ title, context, endAt, thumbnailUrl }) {
+export async function createChallenge({ title, context, endAt, thumbnailUrl, creatorId }) {
   return prisma.challenge.create({
     data: {
       title,
       context,
       endAt: endAt ? new Date(endAt) : null,
       thumbnailUrl: thumbnailUrl ?? null,
+      creatorId: creatorId ?? null,
+    },
+  });
+}
+
+// 챌린지 수정
+export async function updateChallenge(challengeId, { title, context, endAt, thumbnailUrl }) {
+  return prisma.challenge.update({
+    where: { id: challengeId },
+    data: {
+      ...(title !== undefined && { title }),
+      ...(context !== undefined && { context }),
+      ...(endAt !== undefined && { endAt: new Date(endAt) }),
+      ...(thumbnailUrl !== undefined && { thumbnailUrl }),
     },
   });
 }
 
 // 챌린지 삭제
 export async function deleteChallenge(challengeId) {
-  // 먼저 존재 여부 확인
   const existing = await prisma.challenge.findUnique({ where: { id: challengeId } });
   if (!existing) return null;
 
-  await prisma.challenge.delete({ where: { id } });
+  await prisma.challenge.delete({ where: { id: challengeId } });
   return true;
 }
 
@@ -84,11 +97,19 @@ export async function findParticipantsByChallengeId(challengeId) {
   });
 }
 
+export async function findChallengesByCreator(userId) {
+  return prisma.challenge.findMany({
+    where: { creatorId: userId },
+    include: { _count: { select: { participants: true } } },
+    orderBy: { createdAt: 'desc' },
+  });
+}
+
 export async function getHotChallenges() {
   const grouped = await prisma.challengeParticipant.groupBy({
     by: ['challengeId'],
     _count: { userId: true },
-    having: { userId: { _count: { gte: 100 } } },
+    having: { userId: { _count: { gte: 10 } } },
     orderBy: {
       _count: {
         userId: 'desc', // 참여자 많은 순

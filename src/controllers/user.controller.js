@@ -1,5 +1,7 @@
 import { successHandler } from '../middlewares/responseHandler.js';
-import { userCheckNickname, userJoinChallenge, showUserChallenges } from '../services/user.service.js'
+import { userCheckNickname, userJoinChallenge, showUserChallenges } from '../services/user.service.js';
+import { findChallengesByCreator } from '../repositories/challenge.repository.js';
+import { prisma } from '../configs/db.config.js';
 
 export const handleCheckNickname = async (req, res, next) => {
     try {
@@ -31,6 +33,32 @@ export const handleGetMyChallenges = async (req, res, next) => {
         return successHandler(res, '사용자 챌린지 조회 성공', { userChallenges });
 
     }catch (err) {
+        next(err);
+    }
+}
+
+export const handleLeaveChallenge = async (req, res, next) => {
+    try {
+        const userId = parseInt(req.params.userId, 10);
+        const challengeId = parseInt(req.params.challengeId, 10);
+
+        // 인증샷 삭제 (있으면)
+        await prisma.snap.deleteMany({ where: { userId, challengeId } });
+        // 참여 기록 삭제
+        await prisma.challengeParticipant.deleteMany({ where: { userId, challengeId } });
+
+        return successHandler(res, '참여 취소 성공', null);
+    } catch (err) {
+        next(err);
+    }
+};
+
+export const handleGetCreatedChallenges = async (req, res, next) => {
+    try {
+        const userId = parseInt(req.params.userId, 10);
+        const challenges = await findChallengesByCreator(userId);
+        return successHandler(res, '내가 만든 챌린지 조회 성공', { challenges });
+    } catch (err) {
         next(err);
     }
 }
