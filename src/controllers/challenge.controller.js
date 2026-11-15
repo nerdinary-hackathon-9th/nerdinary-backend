@@ -8,8 +8,10 @@ import {
   findChallengeListWithOptions,
   findChallengeById,
   createChallenge as createChallengeRepo,
+  updateChallenge as updateChallengeRepo,
   deleteChallenge as deleteChallengeRepo,
   findParticipantsByChallengeId,
+  findChallengesByCreator,
   getHotChallenges,
   getChallengesToday
 } from '../repositories/challenge.repository.js';
@@ -62,7 +64,7 @@ export async function getChallengeById(req, res, next) {
 // POST /challenge/create
 export async function createChallenge(req, res, next) {
   try {
-    const { title, context, endAt, thumbnailUrl } = req.body;
+    const { title, context, endAt, thumbnailUrl, creatorId } = req.body;
 
     if (!title || typeof title !== 'string') {
       throw new BadRequestError('title은 필수입니다.');
@@ -73,6 +75,7 @@ export async function createChallenge(req, res, next) {
       context,
       endAt,
       thumbnailUrl,
+      creatorId: creatorId ? Number(creatorId) : null,
     });
 
     return successHandler(res, '챌린지 생성 성공', created);
@@ -91,6 +94,43 @@ export async function getChallengeParticipants(req, res, next) {
     const participants = await findParticipantsByChallengeId(challengeId);
 
     return successHandler(res, '챌린지 참가자 목록 조회 성공', participants);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+// GET /challenge/user/:userId/created
+export async function getMyChallenges(req, res, next) {
+  try {
+    const userId = Number(req.params.userId);
+    const challenges = await findChallengesByCreator(userId);
+    return successHandler(res, '내가 만든 챌린지 조회 성공', challenges);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+// PUT /challenge/:challengeId
+export async function updateChallenge(req, res, next) {
+  try {
+    const challengeId = Number(req.params.challengeId);
+    const { title, context, endAt, thumbnailUrl } = req.body;
+
+    const updated = await updateChallengeRepo(challengeId, { title, context, endAt, thumbnailUrl });
+    return successHandler(res, '챌린지 수정 성공', updated);
+  } catch (err) {
+    return next(err);
+  }
+}
+
+// DELETE /challenge/:challengeId
+export async function deleteChallengeById(req, res, next) {
+  try {
+    const challengeId = Number(req.params.challengeId);
+    const result = await deleteChallengeRepo(challengeId);
+
+    if (!result) throw new NotFoundError('챌린지를 찾을 수 없습니다.');
+    return successHandler(res, '챌린지 삭제 성공', null);
   } catch (err) {
     return next(err);
   }

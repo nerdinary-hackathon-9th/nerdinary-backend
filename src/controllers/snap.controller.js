@@ -19,6 +19,27 @@ class SnapController {
     }
   }
 
+  async updateSnap(req, res, next) {
+    try {
+      const { snap_id, user_id } = req.params;
+      const snapId = Number(snap_id);
+      const userId = Number(user_id);
+
+      const parsed = req.body.data ? JSON.parse(req.body.data) : req.body;
+      const { content, imageUrl: bodyImageUrl } = parsed;
+
+      let imageUrl = bodyImageUrl;
+      if (req.files && req.files.length > 0) {
+        imageUrl = await snapService.uploadImage(req.files[0], snapId, userId);
+      }
+
+      const updated = await snapService.updateSnap(snapId, userId, { content, imageUrl });
+      return successHandler(res, "인증샷 수정 완료", updated);
+    } catch (err) {
+      next(err);
+    }
+  }
+
   async deleteSnap(req, res, next) {
     try {
         const { snap_id, user_id } = req.params;

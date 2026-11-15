@@ -1,6 +1,5 @@
 import snapRepository from "../repositories/snap.repositories.js";
 import { BadRequestError, NotFoundError } from "../errors.js";
-import { uploadToS3 } from "../configs/s3.config.js";
 
 class SnapService {
   async createSnap(challengeId, userId, dto, files) {
@@ -14,7 +13,7 @@ class SnapService {
       throw new BadRequestError("이미 종료된 챌린지입니다.");
     }
 
-    const existing = await snapRepository.findParticipation(challengeId, userId);
+    const existing = await snapRepository.findSnapByUserAndChallenge(challengeId, userId);
     if (existing) throw new BadRequestError("이미 인증샷을 제출한 챌린지입니다.");
 
     let imageUrl = null;
@@ -30,29 +29,27 @@ class SnapService {
       ...dto
     };
 
-    return await snapRepository.createSnap(snapData);
+    const snap = await snapRepository.createSnap(snapData);
+    await snapRepository.createParticipation(challengeId, userId);
+    return snap;
   }
 
   async uploadImage(file, challengeId, userId) {
-    try {
-      const key = `sihaeng-bucket/snap/challenge_${challengeId}/user_${userId}`;
-      const imageUrl = await uploadToS3(file.buffer, key, file.mimetype);
-      return imageUrl;
-    } catch (err) {
-      throw new BadRequestError("이미지 업로드에 실패했습니다.");
-    }
+    const base = process.env.SERVER_URL || 'http://localhost:8000';
+    return `${base}/uploads/${file.filename}`;
   }
 
   async uploadImageOnly(file) {
-    try {
-      const timestamp = Date.now();
-      const safeName = file.originalname?.replace(/\s+/g, "_") || "image";
-      const key = `sihaeng-bucket/uploads/${timestamp}_${safeName}`;
-      const imageUrl = await uploadToS3(file.buffer, key, file.mimetype);
-      return imageUrl;
-    } catch (err) {
-      throw new BadRequestError("이미지 업로드에 실패했습니다.");
-    }
+    const base = process.env.SERVER_URL || 'http://localhost:8000';
+    return `${base}/uploads/${file.filename}`;
+  }
+
+  async updateSnap(snapId, userId, { content, imageUrl }) {
+    const snap = await snapRepository.findSnapById(snapId);
+    if (!snap) throw new NotFoundError("존재하지 않는 인증샷입니다.");
+    if (snap.userId !== userId) throw new BadRequestError("수정 권한이 없습니다.");
+
+    return await snapRepository.updateSnap(snapId, { content, imageUrl });
   }
 
   async deleteSnap(snapId, userId) {

@@ -11,10 +11,21 @@ class SnapRepository {
     return await prisma.user.findFirst({ where: { id: userId } });
   }
 
-  // 챌린지-유저 관계 찾기
-  async findParticipation(challengeId, userId) {
-    return await prisma.challengeParticipant.findFirst({
+  // 이미 스냅을 제출했는지 확인
+  async findSnapByUserAndChallenge(challengeId, userId) {
+    return await prisma.snap.findFirst({
         where: { challengeId, userId }
+    });
+  }
+
+  // 참여자 등록
+  async createParticipation(challengeId, userId) {
+    const existing = await prisma.challengeParticipant.findFirst({
+        where: { challengeId, userId }
+    });
+    if (existing) return existing;
+    return await prisma.challengeParticipant.create({
+        data: { challengeId, userId }
     });
   }
 
@@ -43,6 +54,10 @@ class SnapRepository {
         select: {
             id: true,
             imageUrl: true,
+            title: true,
+            content: true,
+            userId: true,
+            user: { select: { nickname: true } },
         }
     });
   }
@@ -51,6 +66,17 @@ class SnapRepository {
   async findSnapsByUser(userId) {
     return await prisma.snap.findMany({
         where: { userId },
+    });
+  }
+
+  // 인증샷 수정
+  async updateSnap(snapId, { content, imageUrl }) {
+    return await prisma.snap.update({
+      where: { id: snapId },
+      data: {
+        ...(content !== undefined && { content }),
+        ...(imageUrl !== undefined && { imageUrl }),
+      },
     });
   }
 

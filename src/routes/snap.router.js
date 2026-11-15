@@ -1,18 +1,19 @@
 import express from "express";
 import SnapController from '../controllers/snap.controller.js';
-import multer from "multer";
+import { upload } from '../configs/multer.config.js';
 
 const router = express.Router();
 
 // 특정 인증샷 조회
 router.get("/:snap_id", SnapController.getSnapBySnapId);
 
-// Multer 설정- 인증샷 이미지 업로드 미들웨어
-const upload = multer({ storage: multer.memoryStorage() });
 const uploadReviewImages = upload.array("images");
 
 // 인증샷 생성
 router.post("/:challenge_id/:user_id", uploadReviewImages, SnapController.createSnap);
+
+// 인증샷 수정
+router.put("/:snap_id/:user_id", uploadReviewImages, SnapController.updateSnap);
 
 // 특정 인증샷 삭제
 router.delete("/:snap_id/:user_id", SnapController.deleteSnap);
